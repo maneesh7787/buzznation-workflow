@@ -1,0 +1,52 @@
+# Project Management Portal - Git Ignore File
+
+# Uploaded files - DO NOT commit user uploads
+uploads/projects/*
+uploads/temp/*
+!uploads/.gitkeep
+!uploads/.gitignore
+
+# Configuration files with sensitive data (if customized)
+# Uncomment these if you create environment-specific configs
+# config/database.local.php
+# config/email.local.php
+
+# PHP
+*.log
+*.tmp
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE Files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Temporary files
+/tmp/*
+*.cache
+
+# Backup files
+*.bak
+*.backup
+*.sql~
+
+# Logs
+logs/
+*.log
+
+# Environment files
+.env
+.env.local
+.env.production
