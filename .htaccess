@@ -1,0 +1,32 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Prevent directory browsing
+Options -Indexes
+
+# Protect uploads directory from direct access
+<Directory "uploads">
+    Order Deny,Allow
+    Deny from all
+</Directory>
+
+# Protect config directory
+<Directory "config">
+    Order Deny,Allow
+    Deny from all
+</Directory>
+
+# Protect database directory
+<Directory "database">
+    Order Deny,Allow
+    Deny from all
+</Directory>
+
+# Set default character set
+AddDefaultCharset UTF-8
+
+# Prevent viewing of .htaccess and .htpasswd files
+<Files .htaccess>
+    Order Allow,Deny
+    Deny from all
+</Files>
