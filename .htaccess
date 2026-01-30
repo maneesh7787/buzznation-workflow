@@ -4,7 +4,8 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
-    # Set the base directory (change if your folder name is different)
+    # Set the base directory
+    # IMPORTANT: This must match the BASE_DIR constant in config.php
     RewriteBase /buzznation-pm/
     
     # If the request is for a directory, append index.php
@@ -19,11 +20,9 @@ Options -Indexes
 DirectoryIndex index.php index.html
 
 # PHP settings
-<IfModule mod_php7.c>
+<IfModule mod_php.c>
     php_flag display_errors Off
     php_flag log_errors On
-    php_value error_log /tmp/php_errors.log
-    php_value session.cookie_path /buzznation-pm/
 </IfModule>
 
 # Security headers

@@ -39,7 +39,15 @@ The fix implements a base path configuration system that ensures all redirection
    define('BASE_DIR', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
    ```
 
-3. Access the application at `http://localhost/buzznation-pm/`
+3. For development with debug info, create or keep `config.dev.php` in the same directory
+
+4. **For production deployment:**
+   - Delete `config.dev.php` to disable debug information
+   - Delete `test-config.php` (contains sensitive server info)
+   - Update login.php to use proper database authentication
+   - Ensure HTTPS is enabled for secure cookie transmission
+
+5. Access the application at `http://localhost/buzznation-pm/`
 
 ## Demo Credentials
 
@@ -51,11 +59,19 @@ The fix implements a base path configuration system that ensures all redirection
 1. **config.php** defines the base directory and provides helper functions:
    - `BASE_DIR` constant: The subfolder path
    - `getBaseUrl()`: Returns the full base URL
-   - `redirectTo($page)`: Handles redirections with proper base path
+   - `redirectTo($page)`: Handles redirections with proper base path and security checks
+   - Session security configuration with httponly, secure, and samesite flags
 
 2. **All redirections** use the `redirectTo()` function instead of direct `header()` calls
 
 3. **All internal links** prepend `BASE_DIR` to ensure correct paths
+
+4. **Security features:**
+   - CSRF token protection on login form
+   - Session regeneration after login to prevent session fixation
+   - Path traversal validation in redirects
+   - Secure session cookie configuration
+   - Debug information only shown in development mode
 
 ## Testing the Fix
 

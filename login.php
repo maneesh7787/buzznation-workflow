@@ -11,24 +11,41 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
     redirectTo('dashboard.php');
 }
 
+// Generate CSRF token if not exists
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 // Initialize error message
 $error = '';
 
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
-    
-    // Simple authentication (replace with actual database check)
-    if ($username === 'admin' && $password === 'password') {
-        // Set session variables
-        $_SESSION['logged_in'] = true;
-        $_SESSION['username'] = $username;
-        
-        // Redirect to dashboard with proper base path
-        redirectTo('dashboard.php');
+    // Verify CSRF token
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $error = 'Invalid request. Please try again.';
     } else {
-        $error = 'Invalid username or password';
+        $username = trim($_POST['username'] ?? '');
+        $password = $_POST['password'] ?? '';
+        
+        // WARNING: Demo credentials - DO NOT USE IN PRODUCTION
+        // In production, use password_hash() and password_verify() with database
+        if ($username === 'admin' && $password === 'password') {
+            // Regenerate session ID to prevent session fixation
+            session_regenerate_id(true);
+            
+            // Set session variables
+            $_SESSION['logged_in'] = true;
+            $_SESSION['username'] = $username;
+            
+            // Generate new CSRF token
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            
+            // Redirect to dashboard with proper base path
+            redirectTo('dashboard.php');
+        } else {
+            $error = 'Invalid username or password';
+        }
     }
 }
 ?>
@@ -138,6 +155,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
         
         <form method="POST" action="<?php echo BASE_DIR; ?>/login.php">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+            
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
@@ -151,16 +170,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit">Login</button>
         </form>
         
+        <?php if (defined('SHOW_DEBUG_INFO') && SHOW_DEBUG_INFO): ?>
         <div class="info">
-            <strong>Demo Credentials:</strong><br>
+            <strong>Demo Credentials (Development Only):</strong><br>
             Username: admin<br>
             Password: password
         </div>
+        <?php endif; ?>
         
+        <?php if (defined('SHOW_DEBUG_INFO') && SHOW_DEBUG_INFO): ?>
         <div class="base-url">
             <strong>Base URL:</strong> <?php echo htmlspecialchars(getBaseUrl()); ?><br>
             <strong>Current Page:</strong> <?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>
         </div>
+        <?php endif; ?>
     </div>
 </body>
 </html>

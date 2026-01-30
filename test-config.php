@@ -2,9 +2,17 @@
 /**
  * Configuration Test Script
  * 
+ * WARNING: This file exposes server configuration details.
+ * DELETE this file before deploying to production!
+ * 
  * This script helps verify that the base path configuration is working correctly.
  * Access this file directly to see if paths are being generated correctly.
  */
+
+// Security check - restrict access to localhost only
+if (!in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1', 'localhost'])) {
+    die('Access denied. This script can only be accessed from localhost.');
+}
 
 // Include configuration
 require_once 'config.php';

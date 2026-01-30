@@ -171,6 +171,7 @@ $username = $_SESSION['username'] ?? 'Guest';
             </div>
         </div>
         
+        <?php if (defined('SHOW_DEBUG_INFO') && SHOW_DEBUG_INFO): ?>
         <div class="debug-info">
             <h3>Debug Information</h3>
             <pre><?php
@@ -181,6 +182,7 @@ echo "Session Status: " . (isset($_SESSION['logged_in']) && $_SESSION['logged_in
 echo "Username: " . (isset($_SESSION['username']) ? $_SESSION['username'] : 'N/A') . "\n";
             ?></pre>
         </div>
+        <?php endif; ?>
     </div>
 </body>
 </html>
